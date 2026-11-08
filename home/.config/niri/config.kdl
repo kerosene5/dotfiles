@@ -361,8 +361,8 @@ window-rule {
 
 // Frosted glass: strong, grainy, colour-boosted blur behind translucent windows.
 blur {
-    passes 3
-    offset 4.0
+    passes 2
+    offset 2.0
     noise 0.03
     saturation 1.6
 }
@@ -371,6 +371,8 @@ blur {
 window-rule {
     geometry-corner-radius 15
     clip-to-geometry true
+    // Border is drawn as a solid fill behind borderless windows; that hid the glass.
+    draw-border-with-background false
     background-effect {
         blur true
         xray false
