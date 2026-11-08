@@ -1,0 +1,35 @@
+
+[general]
+import = [ "~/.config/alacritty/themes/noctalia.toml" ]
+live_config_reload = true
+
+[keyboard]
+
+[[keyboard.bindings]]
+key = "Return"
+mods = "Shift"
+chars = "\u001b\r"
+
+[font]
+size = 14.0
+
+[font.normal]
+family = "JetBrainsMono Nerd Font Mono"
+style = "Regular"
+
+[font.bold]
+family = "JetBrainsMono Nerd Font Mono"
+style = "Bold"
+
+[font.italic]
+family = "JetBrainsMono Nerd Font Mono"
+style = "Italic"
+
+[window]
+opacity = 0.93
+decorations = "None"
+dynamic_padding = true
+
+[window.padding]
+x = 10
+y = 8

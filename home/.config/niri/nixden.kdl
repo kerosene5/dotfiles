@@ -1,0 +1,13 @@
+layout {
+    background-color "#24273a"
+    focus-ring { off; }
+    border {
+        width 1
+        active-color "#cad3f5"
+        inactive-color "#494d64"
+    }
+}
+cursor {
+    xcursor-theme "catppuccin-macchiato-mauve-cursors"
+    xcursor-size 26
+}

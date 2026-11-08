@@ -1,0 +1,34 @@
+#!/usr/bin/env python3
+from pathlib import Path
+import fcntl, subprocess, os
+home = Path.home()
+lock = home / '.cache/noctalia/nixden-theme.lock'
+lock.parent.mkdir(parents=True, exist_ok=True)
+with lock.open('w') as guard:
+    fcntl.flock(guard, fcntl.LOCK_EX)
+    result = subprocess.run(['noctalia', 'msg', 'theme-mode-get'], text=True, capture_output=True, timeout=10)
+    if result.returncode: raise SystemExit(result.stderr)
+    light = result.stdout.strip() == 'light'
+    flavor = 'latte' if light else 'macchiato'
+    def write_changed(path, content):
+        if path.exists() and path.read_text() == content: return
+        tmp = path.with_suffix(path.suffix + '.tmp')
+        tmp.write_text(content)
+        os.replace(tmp, path)
+    config = home / '.config'
+    write_changed(config / 'starship.toml', (config / 'starship' / (flavor + '.toml')).read_text())
+    background = '#eff1f5' if light else '#24273a'
+    foreground = '#4c4f69' if light else '#cad3f5'
+    inactive = '#bcc0cc' if light else '#494d64'
+    cursor = 'catppuccin-latte-mauve-cursors' if light else 'catppuccin-macchiato-mauve-cursors'
+    write_changed(config / 'niri/nixden.kdl', f'layout {{\n    background-color "{background}"\n    focus-ring {{ off; }}\n    border {{\n        width 1\n        active-color "{foreground}"\n        inactive-color "{inactive}"\n    }}\n}}\ncursor {{\n    xcursor-theme "{cursor}"\n    xcursor-size 26\n}}\n')
+    subprocess.run(['gsettings', 'set', 'org.gnome.desktop.interface', 'color-scheme', 'prefer-light' if light else 'prefer-dark'], timeout=10)
+    subprocess.run(['gsettings', 'set', 'org.gnome.desktop.interface', 'icon-theme', 'Papirus-Light' if light else 'Papirus-Dark'], timeout=10)
+    subprocess.run(['gsettings', 'set', 'org.gnome.desktop.interface', 'cursor-theme', cursor], timeout=10)
+    subprocess.run(['gsettings', 'set', 'org.gnome.desktop.interface', 'cursor-size', '26'], timeout=10)
+    target = home / ('Pictures/Wallpapers/nixden/latte/tank.jpg' if light else 'Pictures/Wallpapers/nixden/macchiato/desolate-city.jpg')
+    # Switch the wallpaper only when switching between light and dark.
+    modefile = home / '.cache/noctalia/nixden-mode'
+    if not modefile.exists() or modefile.read_text().strip() != flavor:
+        subprocess.run(['noctalia', 'msg', 'wallpaper-set', str(target)], check=True, timeout=10)
+        modefile.write_text(flavor + '\n')

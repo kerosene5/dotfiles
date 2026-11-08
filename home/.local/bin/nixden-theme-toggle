@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -euo pipefail
+noctalia msg theme-mode-toggle
+exec "$HOME/.local/bin/nixden-theme-sync"
