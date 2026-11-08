@@ -359,6 +359,14 @@ window-rule {
     // block-out-from "screencast"
 }
 
+// Frosted glass: strong, grainy, colour-boosted blur behind translucent windows.
+blur {
+    passes 3
+    offset 4.0
+    noise 0.03
+    saturation 1.6
+}
+
 // Cozy rounded windows.
 window-rule {
     geometry-corner-radius 15
